@@ -16,7 +16,6 @@ namespace ParseJiraTicketsFromXml
         public Form1()
         {
             InitializeComponent();
-            LoadData();
         }
 
         private void LoadData()
@@ -28,16 +27,28 @@ namespace ParseJiraTicketsFromXml
                               select tickets)
                              .OrderBy(r => r.assignee)
                              .ThenBy(r => r.key);
+
             dgReports.DataSource = reportData.ToList();
             lblTotalRecords.Text = "Total tickets: " + (from vr in reportData select vr.key).Distinct().Count().ToString();
+            InsertColorsToData();
         }
         private void btnLoadXmlFile_Click(object sender, EventArgs e)
         {
+            #region Load xml file
             XmlParser xmlParser = new XmlParser();
             openXmlFileDialoge.ShowDialog();
             var filePath = openXmlFileDialoge.FileName;
             List<TickectModal> tickets = xmlParser.ReadFromFile(filePath);
             DateTime currentFileDate = new DateTime();
+            currentFileDate = xmlParser.xmlDownloadDate;
+            #endregion
+
+            #region remove old records for same date
+            var oldRecords = _EF.JiraTickets.Where(r => r.RecordCreationDate == currentFileDate);
+            _EF.JiraTickets.RemoveRange(oldRecords);
+            _EF.SaveChanges();
+            #endregion
+
             foreach (TickectModal ticket in tickets)
             {
                 JiraTicket _efTicket = new JiraTicket();
@@ -54,13 +65,11 @@ namespace ParseJiraTicketsFromXml
                 _efTicket.aggregatetimeoriginalestimate = ticket.aggregatetimeoriginalestimate;
                 _efTicket.aggregatetimeremainingestimate = ticket.aggregatetimeremainingestimate;
                 _efTicket.aggregatetimespent = ticket.aggregatetimespent;
-                _efTicket.RecordCreationDate = Convert.ToDateTime(ticket.xmlDownloadDate);
+                _efTicket.RecordCreationDate = currentFileDate;
                 _efTicket.IsDeleted = false;
-                currentFileDate = Convert.ToDateTime(ticket.xmlDownloadDate);
                 _EF.JiraTickets.Add(_efTicket);
             }
-            var oldRecords = _EF.JiraTickets.Where(r => r.RecordCreationDate == currentFileDate);
-            _EF.JiraTickets.RemoveRange(oldRecords);
+            
             _EF.SaveChanges();
             //this.CleanUpOldTickets(currentFileDate, tickets);
             MessageBox.Show(this,"Hogaya Kaam","Saved",MessageBoxButtons.OK,MessageBoxIcon.Information);
@@ -70,10 +79,11 @@ namespace ParseJiraTicketsFromXml
         private void CleanUpOldTickets(DateTime currentFileDate, List<TickectModal> newTickets)
         {
             //mark as deleted all those tickets which does not exists in current list
-            List<JiraTicket> CurrentTicketsInDb = _EF.JiraTickets.Where(r => r.RecordCreationDate != currentFileDate && r.IsDeleted == false).ToList();
+            List<JiraTicket> CurrentTicketsInDb = _EF.JiraTickets.Where(r => r.RecordCreationDate == currentFileDate && r.IsDeleted == false).ToList();
             foreach (JiraTicket oldTicket in CurrentTicketsInDb)
             {
-                if(!newTickets.Exists(r => r.key == oldTicket.key))
+                var exists = (from result in newTickets where result.key == oldTicket.key select result).FirstOrDefault();
+                if(exists != null)
                 {
                     oldTicket.IsDeleted = true;
                     _EF.SaveChanges();
@@ -82,54 +92,53 @@ namespace ParseJiraTicketsFromXml
         }
 
         string assigneeName = string.Empty;
+        Color newColor = Color.LightGreen;
         string ticketNumber = string.Empty;
-        string vrsummary = string.Empty;
-        string vrlink = string.Empty;
-        string vrtype = string.Empty;
-        private void dgReports_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
+        Color ticketColor = Color.LightBlue;
+
+        private void InsertColorsToData()
         {
-            //foreach (DataGridViewRow row in dgReports.Rows)
-            //{
-            //    if (row.Cells["assignee"].Value.ToString() == assigneeName)
-            //    {
-            //        JiraTicket dd = (JiraTicket)row.DataBoundItem;
-            //        dd.assignee = "";
-            //    }
-            //    else
-            //        assigneeName = row.Cells["assignee"].Value.ToString();
+            if (dgReports.Rows.Count == 0)
+                return;
+            assigneeName = dgReports.Rows[0].Cells["assignee"].Value.ToString();
+            ticketNumber = dgReports.Rows[0].Cells["key"].Value.ToString();
 
-            //    if (row.Cells["key"].Value.ToString() == ticketNumber)
-            //    {
-            //        JiraTicket dd = (JiraTicket)row.DataBoundItem;
-            //        dd.key = "";
-            //    }
-            //    else
-            //        ticketNumber = row.Cells["key"].Value.ToString();
+            foreach (DataGridViewRow row in dgReports.Rows)
+            {
+                if (row.Cells["assignee"].Value.ToString() == assigneeName)
+                {
+                    row.Cells["assignee"].Style.BackColor = newColor;
+                }
+                else
+                {
+                    assigneeName = row.Cells["assignee"].Value.ToString();
+                    if (newColor == Color.LightGreen)
+                        newColor = Color.LightCoral;
+                    else
+                        newColor = Color.LightGreen;
+                    row.Cells["assignee"].Style.BackColor = newColor;
+                }
 
-            //    if (row.Cells["summary"].Value.ToString() == vrsummary)
-            //    {
-            //        JiraTicket dd = (JiraTicket)row.DataBoundItem;
-            //        dd.summary = "";
-            //    }
-            //    else
-            //        vrsummary = row.Cells["summary"].Value.ToString();
-
-            //    if (row.Cells["link"].Value.ToString() == vrlink)
-            //    {
-            //        JiraTicket dd = (JiraTicket)row.DataBoundItem;
-            //        dd.link = "";
-            //    }
-            //    else
-            //        vrlink = row.Cells["link"].Value.ToString();
-
-            //    if (row.Cells["type"].Value.ToString() == vrtype)
-            //    {
-            //        JiraTicket dd = (JiraTicket)row.DataBoundItem;
-            //        dd.type = "";
-            //    }
-            //    else
-            //        vrtype = row.Cells["type"].Value.ToString();
-            //}
+                if (row.Cells["key"].Value.ToString() == ticketNumber)
+                {
+                    row.Cells["key"].Style.BackColor = ticketColor;
+                    row.Cells["RecordCreationDate"].Style.BackColor = ticketColor;
+                }
+                else
+                {
+                    ticketNumber = row.Cells["key"].Value.ToString();
+                    if (ticketColor == Color.LightBlue)
+                        ticketColor = Color.LightPink;
+                    else
+                        ticketColor = Color.LightBlue;
+                    row.Cells["key"].Style.BackColor = ticketColor;
+                    row.Cells["RecordCreationDate"].Style.BackColor = ticketColor;
+                }
+            }
+        }
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            LoadData();
         }      
     }
 }

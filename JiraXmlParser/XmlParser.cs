@@ -10,6 +10,7 @@ namespace JiraXmlParser
 {
     public class XmlParser
     {
+        public DateTime xmlDownloadDate = new DateTime();
         //https://stackoverflow.com/questions/642293/how-do-i-read-and-parse-an-xml-file-in-c
         public List<TickectModal> ReadFromFile(string filePath)
         {
@@ -18,7 +19,7 @@ namespace JiraXmlParser
                 XmlDocument doc = new XmlDocument();
                 doc.Load(filePath);
                 XmlNodeList itemNodes = doc.DocumentElement.SelectNodes("/rss/channel/item");
-                string xmlDownloadDate = doc.DocumentElement.SelectSingleNode("/rss/channel/build-info/build-date").InnerText;
+                this.xmlDownloadDate = Convert.ToDateTime(doc.DocumentElement.SelectSingleNode("/rss/channel/build-info/build-date").InnerText);
                 List<TickectModal> lstTicketModal = new List<TickectModal>();
                 foreach (XmlNode jiraTicket in itemNodes)
                 {
@@ -35,7 +36,6 @@ namespace JiraXmlParser
                     modal.aggregatetimeoriginalestimate = (jiraTicket.SelectNodes("aggregatetimeoriginalestimate").Count > 0) ? jiraTicket.SelectNodes("aggregatetimeoriginalestimate")[0].InnerText : "";
                     modal.aggregatetimeremainingestimate = (jiraTicket.SelectNodes("aggregatetimeremainingestimate").Count > 0) ? jiraTicket.SelectNodes("aggregatetimeremainingestimate")[0].InnerText : "";
                     modal.aggregatetimespent = (jiraTicket.SelectNodes("aggregatetimespent").Count > 0) ? jiraTicket.SelectNodes("aggregatetimespent")[0].InnerText : "";
-                    modal.xmlDownloadDate = Convert.ToDateTime(xmlDownloadDate);
                     lstTicketModal.Add(modal);
                 }
                 return lstTicketModal;
@@ -44,33 +44,6 @@ namespace JiraXmlParser
             {
                 throw ex;
             }
-            /*select specific node 
-            XmlNode node = doc.DocumentElement.SelectSingleNode("/book/title");
-            
-            OR
-            foreach (XmlNode node in doc.DocumentElement.ChildNodes)
-            {
-                string text = node.InnerText; //or loop through its children as well
-            }
-             
-            then read the text inside that node like this
-            string text = node.InnerText;
-                
-            or read an attribute
-            string attr = node.Attributes["theattributename"]?.InnerText
-            */
-
-            /*
-            // Query the data and write out a subset of contacts
-            var query = from c in xml.Root.Descendants("contact")
-                        where (int)c.Attribute("id") < 4
-                        select c.Element("firstName").Value + " " +
-                               c.Element("lastName").Value;
-
-            foreach (string name in query)
-            {
-                Console.WriteLine("Contact's Full Name: {0}", name);
-            }*/
         }
     }
 }

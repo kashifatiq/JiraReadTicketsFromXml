@@ -53,7 +53,7 @@
             this.btnLoadXmlFile.Dock = System.Windows.Forms.DockStyle.Top;
             this.btnLoadXmlFile.Location = new System.Drawing.Point(0, 0);
             this.btnLoadXmlFile.Name = "btnLoadXmlFile";
-            this.btnLoadXmlFile.Size = new System.Drawing.Size(844, 35);
+            this.btnLoadXmlFile.Size = new System.Drawing.Size(1217, 35);
             this.btnLoadXmlFile.TabIndex = 0;
             this.btnLoadXmlFile.Text = "Load Xml File";
             this.btnLoadXmlFile.UseVisualStyleBackColor = true;
@@ -78,9 +78,8 @@
             this.dgReports.Name = "dgReports";
             this.dgReports.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgReports.ShowEditingIcon = false;
-            this.dgReports.Size = new System.Drawing.Size(844, 392);
+            this.dgReports.Size = new System.Drawing.Size(1217, 603);
             this.dgReports.TabIndex = 1;
-            this.dgReports.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.dgReports_DataBindingComplete);
             // 
             // assignee
             // 
@@ -135,9 +134,9 @@
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.lblTotalRecords});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 405);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 616);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(844, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(1217, 22);
             this.statusStrip1.TabIndex = 2;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -150,7 +149,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(844, 427);
+            this.ClientSize = new System.Drawing.Size(1217, 638);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.dgReports);
             this.Controls.Add(this.btnLoadXmlFile);
@@ -159,6 +158,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Read Jira Tickets from XML";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
+            this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dgReports)).EndInit();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();

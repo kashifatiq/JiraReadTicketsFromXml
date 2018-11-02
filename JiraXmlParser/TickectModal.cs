@@ -19,7 +19,7 @@ namespace JiraXmlParser
         public string aggregatetimeoriginalestimate = "";
         public string aggregatetimeremainingestimate = "";
         public string aggregatetimespent = "";
-        public DateTime xmlDownloadDate = DateTime.Now;
+        //public DateTime xmlDownloadDate = DateTime.Now;
         public bool IsDeleted = false;
     }
 }
