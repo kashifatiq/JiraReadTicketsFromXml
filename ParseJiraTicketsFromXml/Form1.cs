@@ -17,6 +17,10 @@ namespace ParseJiraTicketsFromXml
         {
             InitializeComponent();
         }
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            LoadData();
+        }      
 
         private void LoadData()
         {
@@ -71,7 +75,7 @@ namespace ParseJiraTicketsFromXml
             }
             
             _EF.SaveChanges();
-            //this.CleanUpOldTickets(currentFileDate, tickets);
+            this.CleanUpOldTickets(currentFileDate, tickets);
             MessageBox.Show(this,"Hogaya Kaam","Saved",MessageBoxButtons.OK,MessageBoxIcon.Information);
             LoadData();
         }
@@ -79,11 +83,11 @@ namespace ParseJiraTicketsFromXml
         private void CleanUpOldTickets(DateTime currentFileDate, List<TickectModal> newTickets)
         {
             //mark as deleted all those tickets which does not exists in current list
-            List<JiraTicket> CurrentTicketsInDb = _EF.JiraTickets.Where(r => r.RecordCreationDate == currentFileDate && r.IsDeleted == false).ToList();
+            List<JiraTicket> CurrentTicketsInDb = _EF.JiraTickets.Where(r => r.RecordCreationDate < currentFileDate && r.IsDeleted == false).ToList();
             foreach (JiraTicket oldTicket in CurrentTicketsInDb)
             {
-                var exists = (from result in newTickets where result.key == oldTicket.key select result).FirstOrDefault();
-                if(exists != null)
+                var exists = (from result in newTickets where result.key == oldTicket.key && result.assignee == oldTicket.assignee select result).FirstOrDefault();
+                if(exists == null)
                 {
                     oldTicket.IsDeleted = true;
                     _EF.SaveChanges();
@@ -95,7 +99,6 @@ namespace ParseJiraTicketsFromXml
         Color newColor = Color.LightGreen;
         string ticketNumber = string.Empty;
         Color ticketColor = Color.LightBlue;
-
         private void InsertColorsToData()
         {
             if (dgReports.Rows.Count == 0)
@@ -136,9 +139,5 @@ namespace ParseJiraTicketsFromXml
                 }
             }
         }
-        private void Form1_Load(object sender, EventArgs e)
-        {
-            LoadData();
-        }      
     }
 }
