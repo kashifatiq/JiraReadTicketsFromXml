@@ -1,0 +1,105 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="JiraTicketsModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="JiraTickets">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="key" Type="varchar" MaxLength="50" />
+          <Property Name="summary" Type="varchar(max)" />
+          <Property Name="link" Type="varchar" MaxLength="500" />
+          <Property Name="type" Type="varchar" MaxLength="50" />
+          <Property Name="status" Type="varchar" MaxLength="50" />
+          <Property Name="assignee" Type="varchar" MaxLength="50" />
+          <Property Name="createdDate" Type="datetime" />
+          <Property Name="updatedDate" Type="datetime" />
+          <Property Name="aggregatetimeoriginalestimate" Type="varchar" MaxLength="50" />
+          <Property Name="aggregatetimeremainingestimate" Type="varchar" MaxLength="50" />
+          <Property Name="aggregatetimespent" Type="varchar" MaxLength="50" />
+          <Property Name="RecordCreationDate" Type="datetime" />
+          <Property Name="IsDeleted" Type="bit" />
+        </EntityType>
+        <EntityContainer Name="JiraTicketsModelStoreContainer">
+          <EntitySet Name="JiraTickets" EntityType="Self.JiraTickets" Schema="dbo" store:Type="Tables" />
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="JiraTicketsModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="JiraTicket">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="key" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="summary" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="link" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="type" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="status" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="assignee" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="createdDate" Type="DateTime" Precision="3" />
+          <Property Name="updatedDate" Type="DateTime" Precision="3" />
+          <Property Name="aggregatetimeoriginalestimate" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="aggregatetimeremainingestimate" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="aggregatetimespent" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="RecordCreationDate" Type="DateTime" Precision="3" />
+          <Property Name="IsDeleted" Type="Boolean" />
+        </EntityType>
+        <EntityContainer Name="JiraTicketsEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="JiraTickets" EntityType="Self.JiraTicket" />
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="JiraTicketsModelStoreContainer" CdmEntityContainer="JiraTicketsEntities">
+          <EntitySetMapping Name="JiraTickets">
+            <EntityTypeMapping TypeName="JiraTicketsModel.JiraTicket">
+              <MappingFragment StoreEntitySet="JiraTickets">
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="key" ColumnName="key" />
+                <ScalarProperty Name="summary" ColumnName="summary" />
+                <ScalarProperty Name="link" ColumnName="link" />
+                <ScalarProperty Name="type" ColumnName="type" />
+                <ScalarProperty Name="status" ColumnName="status" />
+                <ScalarProperty Name="assignee" ColumnName="assignee" />
+                <ScalarProperty Name="createdDate" ColumnName="createdDate" />
+                <ScalarProperty Name="updatedDate" ColumnName="updatedDate" />
+                <ScalarProperty Name="aggregatetimeoriginalestimate" ColumnName="aggregatetimeoriginalestimate" />
+                <ScalarProperty Name="aggregatetimeremainingestimate" ColumnName="aggregatetimeremainingestimate" />
+                <ScalarProperty Name="aggregatetimespent" ColumnName="aggregatetimespent" />
+                <ScalarProperty Name="RecordCreationDate" ColumnName="RecordCreationDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
