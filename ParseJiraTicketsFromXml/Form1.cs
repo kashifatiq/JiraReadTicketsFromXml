@@ -139,5 +139,64 @@ namespace ParseJiraTicketsFromXml
                 }
             }
         }
+
+        private void btnExportToExcel_Click(object sender, EventArgs e)
+        {
+            saveFileDialog1.ShowDialog();
+            // Copy all to clipboard 
+            /*dgReports.SelectAll(); 
+            DataObject dataObj = dgReports.GetClipboardContent(); 
+            if (dataObj != null) Clipboard.SetDataObject(dataObj); 
+            // Paste in Excel 
+            Microsoft.Office.Interop.Excel.Application xlexcel; 
+            Microsoft.Office.Interop.Excel.Workbook xlWorkBook; 
+            Microsoft.Office.Interop.Excel.Worksheet xlWorkSheet; 
+            object misValue = System.Reflection.Missing.Value; 
+            xlexcel = new Microsoft.Office.Interop.Excel.Application(); 
+            //xlexcel.Visible = true; 
+            xlWorkBook = xlexcel.Workbooks.Add(misValue); 
+            xlWorkSheet = (Microsoft.Office.Interop.Excel.Worksheet)xlWorkBook.Worksheets.get_Item(1); 
+            Microsoft.Office.Interop.Excel.Range CR = (Microsoft.Office.Interop.Excel.Range)xlWorkSheet.Cells[1, 1]; 
+            CR.Select(); 
+            xlWorkSheet.PasteSpecial(CR, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, false);
+            xlWorkBook.SaveAs(saveFileDialog1.FileName, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Microsoft.Office.Interop.Excel.XlSaveAsAccessMode.xlExclusive, Type.Missing, Type.Missing, Type.Missing, Type.Missing);
+            xlexcel.Quit();
+            */
+
+
+            // creating Excel Application  
+            Microsoft.Office.Interop.Excel._Application app = new Microsoft.Office.Interop.Excel.Application();
+            // creating new WorkBook within Excel application  
+            Microsoft.Office.Interop.Excel._Workbook workbook = app.Workbooks.Add(Type.Missing);
+            // creating new Excelsheet in workbook  
+            Microsoft.Office.Interop.Excel._Worksheet worksheet = null;
+            // see the excel sheet behind the program  
+            //app.Visible = true;
+            // get the reference of first sheet. By default its name is Sheet1.  
+            // store its reference to worksheet  
+            worksheet = workbook.Sheets["Sheet1"];
+            worksheet = workbook.ActiveSheet;
+            // changing the name of active sheet  
+            worksheet.Name = "All resources";
+            // storing header part in Excel  
+            for (int i = 1; i < dgReports.Columns.Count + 1; i++)
+            {
+                worksheet.Cells[1, i] = dgReports.Columns[i - 1].HeaderText;
+            }
+            // storing Each row and column value to excel sheet  
+            for (int i = 0; i < dgReports.Rows.Count - 1; i++)
+            {
+                for (int j = 0; j < dgReports.Columns.Count; j++)
+                {
+                    worksheet.Cells[i + 2, j + 1] = dgReports.Rows[i].Cells[j].Value.ToString();
+                }
+            }
+           
+            // save the application  
+            workbook.SaveAs(saveFileDialog1.FileName, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Microsoft.Office.Interop.Excel.XlSaveAsAccessMode.xlExclusive, Type.Missing, Type.Missing, Type.Missing, Type.Missing);
+            // Exit from the application  
+            app.Quit();
+            MessageBox.Show("Data Exported");
+        }
     }
 }
