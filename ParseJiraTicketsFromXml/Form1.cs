@@ -137,33 +137,21 @@ namespace ParseJiraTicketsFromXml
                     row.Cells["key"].Style.BackColor = ticketColor;
                     row.Cells["RecordCreationDate"].Style.BackColor = ticketColor;
                 }
+
+                if (row.Cells["status"].Value.ToString().ToLower() == "dev qa" || row.Cells["status"].Value.ToString().ToLower() == "development" || row.Cells["status"].Value.ToString().ToLower() == "being analyzed")
+                {
+                    row.Cells["status"].Style.BackColor = Color.LightYellow;
+                }
+                else if(row.Cells["status"].Value.ToString().ToLower() == "ready to push")
+                {
+                    row.Cells["status"].Style.BackColor = Color.LightGreen;
+                }
             }
         }
 
         private void btnExportToExcel_Click(object sender, EventArgs e)
         {
             saveFileDialog1.ShowDialog();
-            // Copy all to clipboard 
-            /*dgReports.SelectAll(); 
-            DataObject dataObj = dgReports.GetClipboardContent(); 
-            if (dataObj != null) Clipboard.SetDataObject(dataObj); 
-            // Paste in Excel 
-            Microsoft.Office.Interop.Excel.Application xlexcel; 
-            Microsoft.Office.Interop.Excel.Workbook xlWorkBook; 
-            Microsoft.Office.Interop.Excel.Worksheet xlWorkSheet; 
-            object misValue = System.Reflection.Missing.Value; 
-            xlexcel = new Microsoft.Office.Interop.Excel.Application(); 
-            //xlexcel.Visible = true; 
-            xlWorkBook = xlexcel.Workbooks.Add(misValue); 
-            xlWorkSheet = (Microsoft.Office.Interop.Excel.Worksheet)xlWorkBook.Worksheets.get_Item(1); 
-            Microsoft.Office.Interop.Excel.Range CR = (Microsoft.Office.Interop.Excel.Range)xlWorkSheet.Cells[1, 1]; 
-            CR.Select(); 
-            xlWorkSheet.PasteSpecial(CR, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, false);
-            xlWorkBook.SaveAs(saveFileDialog1.FileName, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Microsoft.Office.Interop.Excel.XlSaveAsAccessMode.xlExclusive, Type.Missing, Type.Missing, Type.Missing, Type.Missing);
-            xlexcel.Quit();
-            */
-
-
             // creating Excel Application  
             Microsoft.Office.Interop.Excel._Application app = new Microsoft.Office.Interop.Excel.Application();
             // creating new WorkBook within Excel application  
@@ -197,6 +185,27 @@ namespace ParseJiraTicketsFromXml
             // Exit from the application  
             app.Quit();
             MessageBox.Show("Data Exported");
+            #region another method
+            // Copy all to clipboard 
+            /*dgReports.SelectAll(); 
+            DataObject dataObj = dgReports.GetClipboardContent(); 
+            if (dataObj != null) Clipboard.SetDataObject(dataObj); 
+            // Paste in Excel 
+            Microsoft.Office.Interop.Excel.Application xlexcel; 
+            Microsoft.Office.Interop.Excel.Workbook xlWorkBook; 
+            Microsoft.Office.Interop.Excel.Worksheet xlWorkSheet; 
+            object misValue = System.Reflection.Missing.Value; 
+            xlexcel = new Microsoft.Office.Interop.Excel.Application(); 
+            //xlexcel.Visible = true; 
+            xlWorkBook = xlexcel.Workbooks.Add(misValue); 
+            xlWorkSheet = (Microsoft.Office.Interop.Excel.Worksheet)xlWorkBook.Worksheets.get_Item(1); 
+            Microsoft.Office.Interop.Excel.Range CR = (Microsoft.Office.Interop.Excel.Range)xlWorkSheet.Cells[1, 1]; 
+            CR.Select(); 
+            xlWorkSheet.PasteSpecial(CR, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, false);
+            xlWorkBook.SaveAs(saveFileDialog1.FileName, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Microsoft.Office.Interop.Excel.XlSaveAsAccessMode.xlExclusive, Type.Missing, Type.Missing, Type.Missing, Type.Missing);
+            xlexcel.Quit();
+            */
+            #endregion
         }
     }
 }
